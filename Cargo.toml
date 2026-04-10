@@ -1,0 +1,14 @@
+[package]
+name = "jwtkit"
+version = "0.1.0"
+authors = ["WatchDG <baranov@w3m.co>"]
+license = "MIT OR Apache-2.0"
+description = "JWT tokens implementation for Rust"
+homepage = "https://github.com/WatchDG/rust-jwtkit"
+documentation = "https://docs.rs/jwtkit"
+repository = "https://github.com/WatchDG/rust-jwtkit"
+readme = "README.md"
+edition = "2024"
+exclude = [".trae/**", "benches/**", "tests/**"]
+
+[dependencies]
