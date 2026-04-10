@@ -13,3 +13,5 @@ exclude = [".trae/**", "benches/**", "tests/**"]
 
 [dependencies]
 basekit = "0.3"
+hmac = "0.12"
+sha2 = "0.10"

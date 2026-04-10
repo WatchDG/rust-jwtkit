@@ -110,3 +110,49 @@ impl Default for PayloadBuilder {
         Self::new()
     }
 }
+
+pub struct JwtBuilder {
+    header: Option<crate::Header>,
+    payload: Option<crate::Payload>,
+}
+
+impl JwtBuilder {
+    pub fn new() -> Self {
+        Self {
+            header: None,
+            payload: None,
+        }
+    }
+
+    pub fn header(mut self, header: crate::Header) -> Self {
+        self.header = Some(header);
+        self
+    }
+
+    pub fn header_with_builder(mut self, builder: HeaderBuilder) -> Self {
+        self.header = Some(builder.build());
+        self
+    }
+
+    pub fn payload(mut self, payload: crate::Payload) -> Self {
+        self.payload = Some(payload);
+        self
+    }
+
+    pub fn payload_with_builder(mut self, builder: PayloadBuilder) -> Self {
+        self.payload = Some(builder.build());
+        self
+    }
+
+    pub fn build(self, secret: &[u8]) -> crate::Jwt {
+        let header = self.header.unwrap_or_else(|| crate::Header::default());
+        let payload = self.payload.unwrap_or_else(|| crate::Payload::default());
+        crate::Jwt::sign(&header, &payload, secret)
+    }
+}
+
+impl Default for JwtBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
