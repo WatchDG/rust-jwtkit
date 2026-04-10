@@ -10,6 +10,8 @@ pub use enums::Algorithm;
 pub use header::Header;
 pub use jwt::Jwt;
 pub use payload::Payload;
-#[cfg(feature = "rsa")]
-pub use signer::rsa_signer::{RsaSigner, RsaVerifier};
-pub use signer::{HmacSigner, Signer};
+#[cfg(any(feature = "hs256", feature = "hs384", feature = "hs512"))]
+pub use signer::HmacSigner;
+pub use signer::Signer;
+#[cfg(any(feature = "rs256", feature = "rs384", feature = "rs512"))]
+pub use signer::{RsaSigner, RsaVerifier};

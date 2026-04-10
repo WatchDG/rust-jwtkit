@@ -22,4 +22,9 @@ default = ["hs256", "hs384", "hs512"]
 hs256 = ["dep:sha2", "dep:hmac"]
 hs384 = ["dep:sha2", "dep:hmac"]
 hs512 = ["dep:sha2", "dep:hmac"]
-rsa = ["dep:rsa"]
+rs256 = ["dep:rsa", "dep:sha2"]
+rs384 = ["dep:rsa", "dep:sha2"]
+rs512 = ["dep:rsa", "dep:sha2"]
+
+[dev-dependencies]
+rand = "0.8"
