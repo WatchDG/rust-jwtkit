@@ -12,3 +12,4 @@ edition = "2024"
 exclude = [".trae/**", "benches/**", "tests/**"]
 
 [dependencies]
+basekit = "0.3"

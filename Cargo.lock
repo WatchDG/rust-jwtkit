@@ -3,5 +3,14 @@
 version = 4
 
 [[package]]
+name = "basekit"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d65440e300e70d7da8e8aca7b9d54e024963fdc887a915102125571320cb0e10"
+
+[[package]]
 name = "jwtkit"
 version = "0.1.0"
+dependencies = [
+ "basekit",
+]
