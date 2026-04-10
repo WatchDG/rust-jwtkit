@@ -1,10 +1,3 @@
-use crate::enums::Algorithm;
-
-pub trait Signer {
-    fn sign(&self, data: &str) -> String;
-    fn algorithm(&self) -> Algorithm;
-}
-
 #[cfg(any(feature = "hs256", feature = "hs384", feature = "hs512"))]
 pub mod hmac;
 
@@ -18,13 +11,13 @@ pub mod ps;
 pub mod ec;
 
 #[cfg(any(feature = "hs256", feature = "hs384", feature = "hs512"))]
-pub use hmac::HmacSigner;
+pub use hmac::HmacVerifier;
 
 #[cfg(any(feature = "rs256", feature = "rs384", feature = "rs512"))]
-pub use rsa::RsaSigner;
+pub use rsa::RsaVerifier;
 
 #[cfg(any(feature = "ps256", feature = "ps384", feature = "ps512"))]
-pub use ps::PssSigner;
+pub use ps::PssVerifier;
 
 #[cfg(any(feature = "es256", feature = "es384"))]
-pub use ec::EcSigner;
+pub use ec::EcVerifier;
