@@ -11,6 +11,9 @@ pub mod hmac;
 #[cfg(any(feature = "rs256", feature = "rs384", feature = "rs512"))]
 pub mod rsa;
 
+#[cfg(any(feature = "ps256", feature = "ps384", feature = "ps512"))]
+pub mod ps;
+
 #[cfg(any(feature = "es256", feature = "es384"))]
 pub mod ec;
 
@@ -19,6 +22,9 @@ pub use hmac::HmacSigner;
 
 #[cfg(any(feature = "rs256", feature = "rs384", feature = "rs512"))]
 pub use rsa::{RsaSigner, RsaVerifier};
+
+#[cfg(any(feature = "ps256", feature = "ps384", feature = "ps512"))]
+pub use ps::{PssSigner, PssVerifier};
 
 #[cfg(any(feature = "es256", feature = "es384"))]
 pub use ec::{EcSigner, EcVerifier};

@@ -15,5 +15,7 @@ pub use signer::HmacSigner;
 pub use signer::Signer;
 #[cfg(any(feature = "es256", feature = "es384"))]
 pub use signer::{EcSigner, EcVerifier};
+#[cfg(any(feature = "ps256", feature = "ps384", feature = "ps512"))]
+pub use signer::{PssSigner, PssVerifier};
 #[cfg(any(feature = "rs256", feature = "rs384", feature = "rs512"))]
 pub use signer::{RsaSigner, RsaVerifier};
