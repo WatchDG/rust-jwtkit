@@ -13,5 +13,13 @@ exclude = [".trae/**", "benches/**", "tests/**"]
 
 [dependencies]
 basekit = "0.3"
-hmac = "0.12"
-sha2 = "0.10"
+rsa = { version = "0.9", optional = true }
+sha2 = { version = "0.10", optional = true }
+hmac = { version = "0.12", optional = true }
+
+[features]
+default = ["hs256", "hs384", "hs512"]
+hs256 = ["dep:sha2", "dep:hmac"]
+hs384 = ["dep:sha2", "dep:hmac"]
+hs512 = ["dep:sha2", "dep:hmac"]
+rsa = ["dep:rsa"]

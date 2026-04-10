@@ -1,5 +1,6 @@
 use jwtkit::{Algorithm, HeaderBuilder, Jwt, JwtBuilder, PayloadBuilder};
 
+#[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_sign_and_verify_hs256() {
     let header = HeaderBuilder::new(Algorithm::HS256).build();
@@ -14,6 +15,7 @@ fn test_jwt_sign_and_verify_hs256() {
     assert_eq!(jwt.payload.sub, Some("user123".to_string()));
 }
 
+#[cfg(feature = "hs384")]
 #[test]
 fn test_jwt_sign_and_verify_hs384() {
     let header = HeaderBuilder::new(Algorithm::HS384).build();
@@ -27,6 +29,7 @@ fn test_jwt_sign_and_verify_hs384() {
     assert_eq!(jwt.header.alg, Algorithm::HS384);
 }
 
+#[cfg(feature = "hs512")]
 #[test]
 fn test_jwt_sign_and_verify_hs512() {
     let header = HeaderBuilder::new(Algorithm::HS512).build();
@@ -40,6 +43,7 @@ fn test_jwt_sign_and_verify_hs512() {
     assert_eq!(jwt.header.alg, Algorithm::HS512);
 }
 
+#[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_verify_wrong_secret() {
     let header = HeaderBuilder::new(Algorithm::HS256).build();
@@ -53,6 +57,7 @@ fn test_jwt_verify_wrong_secret() {
     assert!(!jwt.verify(wrong_secret));
 }
 
+#[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_to_string() {
     let header = HeaderBuilder::new(Algorithm::HS256).build();
@@ -67,6 +72,7 @@ fn test_jwt_to_string() {
     assert_eq!(parts.len(), 3);
 }
 
+#[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_from_string() {
     let header = HeaderBuilder::new(Algorithm::HS256).typ("JWT").build();
@@ -81,7 +87,7 @@ fn test_jwt_from_string() {
     let jwt = Jwt::sign(&header, &payload, secret);
     let token = jwt.to_string();
 
-    let parsed = Jwt::from_string(&token, secret);
+    let parsed = Jwt::from_string_with_secret(&token, secret);
     assert!(parsed.is_some());
 
     let parsed = parsed.unwrap();
@@ -90,6 +96,7 @@ fn test_jwt_from_string() {
     assert_eq!(parsed.payload.iss, Some("test-issuer".to_string()));
 }
 
+#[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_from_string_wrong_secret() {
     let header = HeaderBuilder::new(Algorithm::HS256).build();
@@ -101,19 +108,21 @@ fn test_jwt_from_string_wrong_secret() {
     let jwt = Jwt::sign(&header, &payload, secret);
     let token = jwt.to_string();
 
-    let parsed = Jwt::from_string(&token, wrong_secret);
+    let parsed = Jwt::from_string_with_secret(&token, wrong_secret);
     assert!(parsed.is_none());
 }
 
+#[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_from_invalid_string() {
     let invalid_token = "not.a.valid.token";
     let secret = b"secret";
 
-    let parsed = Jwt::from_string(invalid_token, secret);
+    let parsed = Jwt::from_string_with_secret(invalid_token, secret);
     assert!(parsed.is_none());
 }
 
+#[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_clone() {
     let header = HeaderBuilder::new(Algorithm::HS256).build();
@@ -128,6 +137,7 @@ fn test_jwt_clone() {
     assert_eq!(jwt.signature, cloned.signature);
 }
 
+#[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_builder_with_header_and_payload() {
     let jwt = JwtBuilder::new()
@@ -140,6 +150,7 @@ fn test_jwt_builder_with_header_and_payload() {
     assert_eq!(jwt.payload.sub, Some("user".to_string()));
 }
 
+#[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_builder_default_header() {
     let jwt = JwtBuilder::new()
@@ -151,6 +162,7 @@ fn test_jwt_builder_default_header() {
     assert_eq!(jwt.payload.iss, Some("issuer".to_string()));
 }
 
+#[cfg(feature = "hs512")]
 #[test]
 fn test_jwt_builder_default_payload() {
     let jwt = JwtBuilder::new()
@@ -162,6 +174,7 @@ fn test_jwt_builder_default_payload() {
     assert_eq!(jwt.payload.iss, None);
 }
 
+#[cfg(feature = "hs384")]
 #[test]
 fn test_jwt_builder_complete() {
     let jwt = JwtBuilder::new()
