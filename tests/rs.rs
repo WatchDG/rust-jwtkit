@@ -1,3 +1,5 @@
+#![cfg(any(feature = "rs256", feature = "rs384", feature = "rs512"))]
+
 use jwtkit::{Algorithm, HeaderBuilder, Jwt, PayloadBuilder, RsaSigner, RsaVerifier, Signer};
 use rand::rngs::OsRng;
 use rsa::pkcs8::{EncodePrivateKey, EncodePublicKey};

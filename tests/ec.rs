@@ -1,3 +1,5 @@
+#![cfg(any(feature = "es256", feature = "es384"))]
+
 use ecdsa::SigningKey;
 use jwtkit::{Algorithm, EcSigner, EcVerifier, Signer};
 use p256::NistP256;

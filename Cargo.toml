@@ -34,3 +34,6 @@ es384 = ["dep:ecdsa", "dep:p384", "dep:sha2"]
 [dev-dependencies]
 rand = "0.8"
 rsa = "0.9"
+ecdsa = "0.16"
+p256 = "0.13"
+p384 = "0.13"
