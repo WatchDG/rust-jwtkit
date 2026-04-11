@@ -1,4 +1,4 @@
-use jwtkit::{Algorithm, HeaderBuilder, HmacSigner, Jwt, PayloadBuilder, Signer};
+use jwtkit::{Algorithm, HeaderBuilder, HmacSigner, Jwt, JwtBuilder, PayloadBuilder, Signer};
 
 #[cfg(feature = "hs256")]
 #[test]
@@ -37,10 +37,12 @@ fn test_hmac_signer_hs512() {
 #[test]
 fn test_jwt_with_signer_hs256() {
     let signer = HmacSigner::new(b"secret-key", Algorithm::HS256);
-    let header = HeaderBuilder::new(Algorithm::HS256).build();
-    let payload = PayloadBuilder::new().sub("user123").exp(9999999999).build();
 
-    let jwt = Jwt::sign_with_signer(&header, &payload, &signer);
+    let jwt = JwtBuilder::new()
+        .header_with_builder(HeaderBuilder::new(Algorithm::HS256))
+        .payload_with_builder(PayloadBuilder::new().sub("user123").exp(9999999999))
+        .signer(&signer)
+        .build();
 
     assert!(jwt.verify_with_signer(&signer));
     assert_eq!(jwt.header.alg, Algorithm::HS256);
@@ -50,10 +52,12 @@ fn test_jwt_with_signer_hs256() {
 #[test]
 fn test_jwt_with_signer_hs384() {
     let signer = HmacSigner::new(b"secret-key", Algorithm::HS384);
-    let header = HeaderBuilder::new(Algorithm::HS384).build();
-    let payload = PayloadBuilder::new().sub("user123").exp(9999999999).build();
 
-    let jwt = Jwt::sign_with_signer(&header, &payload, &signer);
+    let jwt = JwtBuilder::new()
+        .header_with_builder(HeaderBuilder::new(Algorithm::HS384))
+        .payload_with_builder(PayloadBuilder::new().sub("user123").exp(9999999999))
+        .signer(&signer)
+        .build();
 
     assert!(jwt.verify_with_signer(&signer));
     assert_eq!(jwt.header.alg, Algorithm::HS384);
@@ -63,10 +67,12 @@ fn test_jwt_with_signer_hs384() {
 #[test]
 fn test_jwt_with_signer_hs512() {
     let signer = HmacSigner::new(b"secret-key", Algorithm::HS512);
-    let header = HeaderBuilder::new(Algorithm::HS512).build();
-    let payload = PayloadBuilder::new().sub("user123").exp(9999999999).build();
 
-    let jwt = Jwt::sign_with_signer(&header, &payload, &signer);
+    let jwt = JwtBuilder::new()
+        .header_with_builder(HeaderBuilder::new(Algorithm::HS512))
+        .payload_with_builder(PayloadBuilder::new().sub("user123").exp(9999999999))
+        .signer(&signer)
+        .build();
 
     assert!(jwt.verify_with_signer(&signer));
     assert_eq!(jwt.header.alg, Algorithm::HS512);
@@ -78,10 +84,11 @@ fn test_jwt_with_signer_wrong_key() {
     let signer1 = HmacSigner::new(b"correct-key", Algorithm::HS256);
     let signer2 = HmacSigner::new(b"wrong-key", Algorithm::HS256);
 
-    let header = HeaderBuilder::new(Algorithm::HS256).build();
-    let payload = PayloadBuilder::new().sub("user").build();
-
-    let jwt = Jwt::sign_with_signer(&header, &payload, &signer1);
+    let jwt = JwtBuilder::new()
+        .header_with_builder(HeaderBuilder::new(Algorithm::HS256))
+        .payload_with_builder(PayloadBuilder::new().sub("user"))
+        .signer(&signer1)
+        .build();
 
     assert!(!jwt.verify_with_signer(&signer2));
 }
@@ -90,10 +97,12 @@ fn test_jwt_with_signer_wrong_key() {
 #[test]
 fn test_jwt_from_string_with_signer() {
     let signer = HmacSigner::new(b"secret", Algorithm::HS256);
-    let header = HeaderBuilder::new(Algorithm::HS256).build();
-    let payload = PayloadBuilder::new().iss("issuer").sub("subject").build();
 
-    let jwt = Jwt::sign_with_signer(&header, &payload, &signer);
+    let jwt = JwtBuilder::new()
+        .header_with_builder(HeaderBuilder::new(Algorithm::HS256))
+        .payload_with_builder(PayloadBuilder::new().iss("issuer").sub("subject"))
+        .signer(&signer)
+        .build();
     let token = jwt.to_string();
 
     let parsed = Jwt::from_string(&token, &signer);

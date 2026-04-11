@@ -18,19 +18,6 @@ impl Jwt {
         }
     }
 
-    pub fn sign_with_signer(header: &Header, payload: &Payload, signer: &dyn Signer) -> Self {
-        let header_encoded = header.encode();
-        let payload_encoded = payload.encode();
-        let signing_input = format!("{}.{}", header_encoded, payload_encoded);
-        let signature = signer.sign(&signing_input);
-
-        Self {
-            header: header.clone(),
-            payload: payload.clone(),
-            signature,
-        }
-    }
-
     pub fn verify_with_signer(&self, signer: &dyn Signer) -> bool {
         let header_encoded = self.header.encode();
         let payload_encoded = self.payload.encode();
@@ -77,12 +64,16 @@ mod hmac_support {
     use super::Jwt;
     use crate::header::Header;
     use crate::payload::Payload;
-    use crate::signer::HmacSigner;
+    use crate::signer::{HmacSigner, Signer};
 
     impl Jwt {
         pub fn sign(header: &Header, payload: &Payload, secret: &[u8]) -> Self {
             let signer = HmacSigner::new(secret, header.alg);
-            Self::sign_with_signer(header, payload, &signer)
+            let header_encoded = header.encode();
+            let payload_encoded = payload.encode();
+            let signing_input = format!("{}.{}", header_encoded, payload_encoded);
+            let signature = signer.sign(&signing_input);
+            Self::new(header.clone(), payload.clone(), signature)
         }
 
         pub fn verify(&self, secret: &[u8]) -> bool {

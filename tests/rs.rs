@@ -1,6 +1,8 @@
 #![cfg(any(feature = "rs256", feature = "rs384", feature = "rs512"))]
 
-use jwtkit::{Algorithm, HeaderBuilder, Jwt, PayloadBuilder, RsaSigner, RsaVerifier, Signer};
+use jwtkit::{
+    Algorithm, HeaderBuilder, JwtBuilder, PayloadBuilder, RsaSigner, RsaVerifier, Signer,
+};
 use rand::rngs::OsRng;
 use rsa::pkcs8::{EncodePrivateKey, EncodePublicKey};
 use rsa::{RsaPrivateKey, RsaPublicKey};
@@ -72,10 +74,12 @@ fn test_jwt_with_rsa_signer_rs256() {
         .unwrap();
 
     let signer = RsaSigner::new(&private_pem, Algorithm::RS256);
-    let header = HeaderBuilder::new(Algorithm::RS256).build();
-    let payload = PayloadBuilder::new().sub("user123").exp(9999999999).build();
 
-    let jwt = Jwt::sign_with_signer(&header, &payload, &signer);
+    let jwt = JwtBuilder::new()
+        .header_with_builder(HeaderBuilder::new(Algorithm::RS256))
+        .payload_with_builder(PayloadBuilder::new().sub("user123").exp(9999999999))
+        .signer(&signer)
+        .build();
 
     let verifier = RsaVerifier::new(&public_pem, Algorithm::RS256);
     let header_encoded = jwt.header.encode();
@@ -99,10 +103,12 @@ fn test_jwt_with_rsa_signer_rs384() {
         .unwrap();
 
     let signer = RsaSigner::new(&private_pem, Algorithm::RS384);
-    let header = HeaderBuilder::new(Algorithm::RS384).build();
-    let payload = PayloadBuilder::new().sub("user456").iss("issuer").build();
 
-    let jwt = Jwt::sign_with_signer(&header, &payload, &signer);
+    let jwt = JwtBuilder::new()
+        .header_with_builder(HeaderBuilder::new(Algorithm::RS384))
+        .payload_with_builder(PayloadBuilder::new().sub("user456").iss("issuer"))
+        .signer(&signer)
+        .build();
 
     let verifier = RsaVerifier::new(&public_pem, Algorithm::RS384);
     let header_encoded = jwt.header.encode();
@@ -126,10 +132,12 @@ fn test_jwt_with_rsa_signer_rs512() {
         .unwrap();
 
     let signer = RsaSigner::new(&private_pem, Algorithm::RS512);
-    let header = HeaderBuilder::new(Algorithm::RS512).build();
-    let payload = PayloadBuilder::new().sub("user789").iat(1234567890).build();
 
-    let jwt = Jwt::sign_with_signer(&header, &payload, &signer);
+    let jwt = JwtBuilder::new()
+        .header_with_builder(HeaderBuilder::new(Algorithm::RS512))
+        .payload_with_builder(PayloadBuilder::new().sub("user789").iat(1234567890))
+        .signer(&signer)
+        .build();
 
     let verifier = RsaVerifier::new(&public_pem, Algorithm::RS512);
     let header_encoded = jwt.header.encode();

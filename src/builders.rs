@@ -111,16 +111,18 @@ impl Default for PayloadBuilder {
     }
 }
 
-pub struct JwtBuilder {
+pub struct JwtBuilder<'a> {
     header: Option<crate::Header>,
     payload: Option<crate::Payload>,
+    signer: Option<&'a dyn crate::signer::Signer>,
 }
 
-impl JwtBuilder {
+impl<'a> JwtBuilder<'a> {
     pub fn new() -> Self {
         Self {
             header: None,
             payload: None,
+            signer: None,
         }
     }
 
@@ -144,14 +146,26 @@ impl JwtBuilder {
         self
     }
 
-    pub fn build(self, secret: &[u8]) -> crate::Jwt {
+    pub fn signer(mut self, signer: &'a dyn crate::signer::Signer) -> Self {
+        self.signer = Some(signer);
+        self
+    }
+
+    pub fn build(self) -> crate::Jwt {
         let header = self.header.unwrap_or_else(|| crate::Header::default());
         let payload = self.payload.unwrap_or_else(|| crate::Payload::default());
-        crate::Jwt::sign(&header, &payload, secret)
+        let signer = self.signer.expect("signer must be set");
+
+        let header_encoded = header.encode();
+        let payload_encoded = payload.encode();
+        let signing_input = format!("{}.{}", header_encoded, payload_encoded);
+        let signature = signer.sign(&signing_input);
+
+        crate::Jwt::new(header, payload, signature)
     }
 }
 
-impl Default for JwtBuilder {
+impl Default for JwtBuilder<'_> {
     fn default() -> Self {
         Self::new()
     }

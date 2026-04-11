@@ -1,4 +1,4 @@
-use jwtkit::{Algorithm, HeaderBuilder, Jwt, JwtBuilder, PayloadBuilder};
+use jwtkit::{Algorithm, HeaderBuilder, HmacSigner, Jwt, JwtBuilder, PayloadBuilder};
 
 #[cfg(feature = "hs256")]
 #[test]
@@ -140,10 +140,12 @@ fn test_jwt_clone() {
 #[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_builder_with_header_and_payload() {
+    let signer = HmacSigner::new(b"secret", Algorithm::HS256);
     let jwt = JwtBuilder::new()
         .header_with_builder(HeaderBuilder::new(Algorithm::HS256))
         .payload_with_builder(PayloadBuilder::new().sub("user").exp(9999999999))
-        .build(b"secret");
+        .signer(&signer)
+        .build();
 
     assert!(jwt.verify(b"secret"));
     assert_eq!(jwt.header.alg, Algorithm::HS256);
@@ -153,9 +155,11 @@ fn test_jwt_builder_with_header_and_payload() {
 #[cfg(feature = "hs256")]
 #[test]
 fn test_jwt_builder_default_header() {
+    let signer = HmacSigner::new(b"secret", Algorithm::HS256);
     let jwt = JwtBuilder::new()
         .payload_with_builder(PayloadBuilder::new().iss("issuer"))
-        .build(b"secret");
+        .signer(&signer)
+        .build();
 
     assert!(jwt.verify(b"secret"));
     assert_eq!(jwt.header.alg, Algorithm::HS256);
@@ -165,9 +169,11 @@ fn test_jwt_builder_default_header() {
 #[cfg(feature = "hs512")]
 #[test]
 fn test_jwt_builder_default_payload() {
+    let signer = HmacSigner::new(b"secret", Algorithm::HS512);
     let jwt = JwtBuilder::new()
         .header_with_builder(HeaderBuilder::new(Algorithm::HS512))
-        .build(b"secret");
+        .signer(&signer)
+        .build();
 
     assert!(jwt.verify(b"secret"));
     assert_eq!(jwt.header.alg, Algorithm::HS512);
@@ -177,6 +183,7 @@ fn test_jwt_builder_default_payload() {
 #[cfg(feature = "hs384")]
 #[test]
 fn test_jwt_builder_complete() {
+    let signer = HmacSigner::new(b"secret", Algorithm::HS384);
     let jwt = JwtBuilder::new()
         .header_with_builder(HeaderBuilder::new(Algorithm::HS384).kid("key-id"))
         .payload_with_builder(
@@ -189,7 +196,8 @@ fn test_jwt_builder_complete() {
                 .iat(1234560000)
                 .jti("jwt-id"),
         )
-        .build(b"secret");
+        .signer(&signer)
+        .build();
 
     assert!(jwt.verify(b"secret"));
     assert_eq!(jwt.header.alg, Algorithm::HS384);
